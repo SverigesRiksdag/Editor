@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta charset="utf-8">
+        <style>
+
+      .-sew-list-container {
+        background: white;
+        border: 1px solid #DDD;
+        border-radius: 3px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        min-width: 180px;
+      }
+
+      .-sew-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .-sew-list-item {
+        display: block;
+        padding: 5px 10px;
+        border-bottom: 1px solid #DDD;  
+      }
+
+
+      .-sew-list-item small {
+        color: #afafaf;
+      }
+
+      .-sew-list-item.selected {
+        color: white;
+        background: gray;
+        cursor:pointer;
+        text-decoration: none;
+      }          
+        </style>
+<title>wysihtml5 - Simple Demo</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="jquery.sew.js"></script>
+
+<script type="text/javascript">
+
+        var values = [
+          {val:'Barbro Westerholm (FP)',meta:''},
+          {val:'Rune Wikström (M)',meta:''},
+          {val:'Staffan Anger (M)',meta:''},
+          {val:'Jan Ertsborn (FP)',meta:''},
+          {val:'Per-Ingvar Johnsson (C)',meta:''},
+          {val:'Peder Wachtmeister (M)',meta:''},
+          {val:'Ulf Nilsson (FP)',meta:''},
+          {val:'Björn von Sydow (S)',meta:''},
+          {val:'CarlB Hamilton (FP)',meta:''},
+          {val:'Gunnar Andrén (FP)',meta:''},
+          {val:'Göran Montan (M)',meta:''},
+          {val:'Carin Runeson (S)',meta:''},
+          {val:'Cristina Husmark Pehrsson (M)',meta:''},
+          {val:'Mats Odell (KD)',meta:''},
+          {val:'Staffan Danielsson (C)',meta:''},
+          {val:'Kerstin Engle (S)',meta:''},
+          {val:'Billy Gustafsson (S)',meta:''},
+          {val:'Susanne Eberstein (S)',meta:''},
+          {val:'Jacob Johnson (V)',meta:''},
+          {val:'MargaretaB Kjellin (M)',meta:''},
+          {val:'Kurt Kvarnström (S)',meta:''},
+          {val:'Anita Brodén (FP)',meta:''},
+          {val:'Eva Lohman (M)',meta:''},
+          {val:'Gustav Nilsson (M)',meta:''},
+          {val:'Lars Elinderson (M)',meta:''},
+          {val:'Bo Bernhardsson (S)',meta:''},
+          {val:'Katarina Brännström (M)',meta:''},
+          {val:'Lars Johansson (S)',meta:''},
+          {val:'Wiwi-Anne Johansson (V)',meta:''},
+          {val:'Kent Persson (V)',meta:''},
+          {val:'Bengt-Anders Johansson (M)',meta:''},
+          {val:'Anders Karlsson (S)',meta:''},
+          {val:'Yvonne Andersson (KD)',meta:''},
+          {val:'Roland Utbult (KD)',meta:''},
+          {val:'Hans Olsson (S)',meta:''},
+          {val:'Eva BengtsonSkogsberg (M)',meta:''},
+          {val:'Christina Oskarsson (S)',meta:''},
+          {val:'Marietta dePourbaix-Lundin (M)',meta:''},
+          {val:'Jan-Olof Larsson (S)',meta:''},
+          {val:'Lars Gustafsson (KD)',meta:''},
+          {val:'Jan Lindholm (MP)',meta:''},
+          {val:'Mats Johansson (M)',meta:''},
+          {val:'Eva Olofsson (V)',meta:''},
+          {val:'Lennart Axelsson (S)',meta:''},
+          {val:'Lars-Axel Nordell (KD)',meta:''},
+          {val:'Siv Holma (V)',meta:''},
+          {val:'Krister Örnfjäder (S)',meta:''},
+          {val:'Lars Tysklind (FP)',meta:''},
+          {val:'Ann Arleklo (S)',meta:''},
+          {val:'Karin Åström (S)',meta:''},
+          {val:'Maria Plass (M)',meta:''},
+          {val:'Annelie Enochson (KD)',meta:''},
+          {val:'Christer Winbäck (FP)',meta:''},
+          {val:'Thomas Strand (S)',meta:''},
+          {val:'Leif Pettersson (S)',meta:''},
+          {val:'Marianne Berg (V)',meta:''},
+          {val:'Katarina Köhler (S)',meta:''},
+          {val:'Mats Pertoft (MP)',meta:''},
+          {val:'Phia Andersson (S)',meta:''},
+          {val:'Kerstin Lundgren (C)',meta:''},
+          {val:'Solveig Zander (C)',meta:''},
+          {val:'Ismail Kamil (FP)',meta:''},
+          {val:'Anders Andersson (KD)',meta:''},
+          {val:'Mikael Cederbratt (M)',meta:''},
+          {val:'Kerstin Haglö (S)',meta:''},
+          {val:'Leif Jakobsson (S)',meta:''},
+          {val:'Eva Sonidsson (S)',meta:''},
+          {val:'Edip Noyan (M)',meta:''},
+          {val:'Raimo Pärssinen (S)',meta:''},
+          {val:'Tuve Skånberg (KD)',meta:''},
+          {val:'Åsa Lindestam (S)',meta:''},
+          {val:'Agneta Gille (S)',meta:''},
+          {val:'Helene Petersson (S)',meta:''},
+          {val:'Finn Bengtsson (M)',meta:''},
+          {val:'Lars-Arne Staxäng (M)',meta:''},
+          {val:'Maria Lundqvist-Brömster (FP)',meta:''},
+          {val:'Lena Asplund (M)',meta:''},
+          {val:'Gunilla Nordgren (M)',meta:''},
+          {val:'AnneMarie Brodén (M)',meta:''},
+          {val:'Catharina Bråkenhielm (S)',meta:''},
+          {val:'Peter Rådberg (MP)',meta:''},
+          {val:'Karin Nilsson (C)',meta:''},
+          {val:'Lars Ohly (V)',meta:''},
+          {val:'Per Åsling (C)',meta:''},
+          {val:'Carina Hägg (S)',meta:''},
+          {val:'Ulf Berg (M)',meta:''},
+          {val:'Lena Sommestad (S)',meta:''},
+          {val:'Patrik Björck (S)',meta:''},
+          {val:'Carina Ohlsson (S)',meta:''},
+          {val:'Ann-Christin Ahlberg (S)',meta:''},
+          {val:'Torbjörn Björlund (V)',meta:''},
+          {val:'Anti Avsan (M)',meta:''},
+          {val:'Lena Olsson (V)',meta:''},
+          {val:'Per Bill (M)',meta:''},
+          {val:'Suzanne Svensson (S)',meta:''},
+          {val:'Åsa Torstensson (C)',meta:''},
+          {val:'Betty Malmberg (M)',meta:''},
+          {val:'Bodil Ceballos (MP)',meta:''},
+          {val:'Peter Eriksson (MP)',meta:''},
+          {val:'Berit Högman (S)',meta:''},
+          {val:'Anders Åkesson (C)',meta:''},
+          {val:'Lotta Finstorp (M)',meta:''},
+          {val:'Peter Hultqvist (S)',meta:''},
+          {val:'Désirée Pethrus (KD)',meta:''},
+          {val:'Jabar Amin (MP)',meta:''},
+          {val:'Ewa ThalénFinné (M)',meta:''},
+          {val:'Carina Adolfsson Elgestam (S)',meta:''},
+          {val:'Anna Steele (FP)',meta:''},
+          {val:'Margareta Cederfelt (M)',meta:''},
+          {val:'Monica Green (S)',meta:''},
+          {val:'Börje Vestlund (S)',meta:''},
+          {val:'Göran Pettersson (M)',meta:''},
+          {val:'Christina Zedell (S)',meta:''},
+          {val:'Tina Ehn (MP)',meta:''},
+          {val:'GunvorG Ericson (MP)',meta:''},
+          {val:'Mia Sydow Mölleby (V)',meta:''},
+          {val:'Cecilia DalmanEek (S)',meta:''},
+          {val:'Jan-Evert Rådhström (M)',meta:''},
+          {val:'Annika Eclund (KD)',meta:''},
+          {val:'Anders WJonsson (C)',meta:''},
+          {val:'Jan Ericson (M)',meta:''},
+          {val:'Pia Hallström (M)',meta:''},
+          {val:'Hans Rothenberg (M)',meta:''},
+          {val:'Nina Lundström (FP)',meta:''},
+          {val:'Johan Andersson (S)',meta:''},
+          {val:'Cecilia Magnusson (M)',meta:''},
+          {val:'Ann-Kristine Johansson (S)',meta:''},
+          {val:'Peter Johnsson (S)',meta:''},
+          {val:'Pia Nilsson (S)',meta:''},
+          {val:'Stefan Käll (FP)',meta:''},
+          {val:'Christer Adelsbo (S)',meta:''},
+          {val:'Isabella Jernbeck (M)',meta:''},
+          {val:'Helena Bouveng (M)',meta:''},
+          {val:'Marie Granlund (S)',meta:''},
+          {val:'Håkan Juholt (S)',meta:''},
+          {val:'Esabelle Dingizian (MP)',meta:''},
+          {val:'Ulla Andersson (V)',meta:''},
+          {val:'Hans Backman (FP)',meta:''},
+          {val:'Eva Flyborg (FP)',meta:''},
+          {val:'Caroline Helmersson Olsson (S)',meta:''},
+          {val:'Hans Hoff (S)',meta:''},
+          {val:'Yilmaz Kerimo (S)',meta:''},
+          {val:'Jörgen Hellman (S)',meta:''},
+          {val:'Eva-Lena Jansson (S)',meta:''},
+          {val:'Tommy Waidelich (S)',meta:''},
+          {val:'Krister Hammarbergh (M)',meta:''},
+          {val:'Ylva Johansson (S)',meta:''},
+          {val:'Robert Halef (KD)',meta:''},
+          {val:'Allan Widman (FP)',meta:''},
+          {val:'Penilla Gunther (KD)',meta:''},
+          {val:'Urban Ahlin (S)',meta:''},
+          {val:'Annika Qarlsson (C)',meta:''},
+          {val:'Irene Oskarsson (KD)',meta:''},
+          {val:'Hans Wallmark (M)',meta:''},
+          {val:'Kent Härstedt (S)',meta:''},
+          {val:'Stefan Caplan (M)',meta:''},
+          {val:'Ulrika Carlsson (C)',meta:''},
+          {val:'Sten Bergheden (M)',meta:''},
+          {val:'Per Svedberg (S)',meta:''},
+          {val:'LarsMejern Larsson (S)',meta:''},
+          {val:'Ann-Charlotte Hammar Johnsson (M)',meta:''},
+          {val:'Anette Åkesson (M)',meta:''},
+          {val:'Per Lodenius (C)',meta:''},
+          {val:'Tina Acketoft (FP)',meta:''},
+          {val:'Gunilla Carlsson (S)',meta:''},
+          {val:'Maria Stenberg (S)',meta:''},
+          {val:'Gunnar Sandberg (S)',meta:''},
+          {val:'Tomas Eneroth (S)',meta:''},
+          {val:'Mikael Oscarsson (KD)',meta:''},
+          {val:'KennethG Forslund (S)',meta:''},
+          {val:'Marie Nordén (S)',meta:''},
+          {val:'Annicka Engblom (M)',meta:''},
+          {val:'Gunnar Axén (M)',meta:''},
+          {val:'Roger Tiefensee (C)',meta:''},
+          {val:'Jasenko Omanovic (S)',meta:''},
+          {val:'Olle Thorell (S)',meta:''},
+          {val:'Elisabeth Svantesson (M)',meta:''},
+          {val:'Peter Jeppsson (S)',meta:''},
+          {val:'Johan Pehrson (FP)',meta:''},
+          {val:'Henrik Ripa (M)',meta:''},
+          {val:'Christer Nylander (FP)',meta:''},
+          {val:'Boriana Åberg (M)',meta:''},
+          {val:'Erik AEriksson (C)',meta:''},
+          {val:'Anna Rheyneuclaudes Kihlman (M)',meta:''},
+          {val:'Camilla Waltersson Grönvall (M)',meta:''},
+          {val:'Ulf Holm (MP)',meta:''},
+          {val:'Christer Engelhardt (S)',meta:''},
+          {val:'Cecilie Tenfjord-Toftby (M)',meta:''},
+          {val:'Lars Eriksson (S)',meta:''},
+          {val:'Anna KinbergBatra (M)',meta:''},
+          {val:'Morgan Johansson (S)',meta:''},
+          {val:'Patrick Reslow (M)',meta:''},
+          {val:'Anders Ygeman (S)',meta:''},
+          {val:'Hans Unander (S)',meta:''},
+          {val:'Désirée Liljevall (S)',meta:''},
+          {val:'Emma Carlsson Löfdahl (FP)',meta:''},
+          {val:'JanR Andersson (M)',meta:''},
+          {val:'Amineh Kakabaveh (V)',meta:''},
+          {val:'Jessica Polfjärd (M)',meta:''},
+          {val:'Per Bolund (MP)',meta:''},
+          {val:'Mehmet Kaplan (MP)',meta:''},
+          {val:'Mikael Damberg (S)',meta:''},
+          {val:'Tobias Sjö (M)',meta:''},
+          {val:'Jennie Nilsson (S)',meta:''},
+          {val:'Ibrahim Baylan (S)',meta:''},
+          {val:'Helén Pettersson (S)',meta:''},
+          {val:'Louise Malmström (S)',meta:''},
+          {val:'Helena Lindahl (C)',meta:''},
+          {val:'Veronica Palm (S)',meta:''},
+          {val:'Matilda Ernkrans (S)',meta:''},
+          {val:'Ulrika Karlsson (M)',meta:''},
+          {val:'Andreas Norlén (M)',meta:''},
+          {val:'Fredrik Olovsson (S)',meta:''},
+          {val:'Cecilia Widegren (M)',meta:''},
+          {val:'Meeri Wasberg (S)',meta:''},
+          {val:'Lena Hallengren (S)',meta:''},
+          {val:'Rossana Dinamarca (V)',meta:''},
+          {val:'Johan Linander (C)',meta:''},
+          {val:'Gustaf Hoffstedt (M)',meta:''},
+          {val:'Gustav Blix (M)',meta:''},
+          {val:'Hillevi Larsson (S)',meta:''},
+          {val:'Teres Lindberg (S)',meta:''},
+          {val:'Olof Lavesson (M)',meta:''},
+          {val:'Anders Hansson (M)',meta:''},
+          {val:'Henrik von Sydow (M)',meta:''},
+          {val:'Christian Holm (M)',meta:''},
+          {val:'Johan Löfstrand (S)',meta:''},
+          {val:'Ali Esbati (V)',meta:''},
+          {val:'Nina Larsson (FP)',meta:''},
+          {val:'Lars Hjälmered (M)',meta:''},
+          {val:'Hannah Bergstedt (S)',meta:''},
+          {val:'Karin Granbom Ellison (FP)',meta:''},
+          {val:'Fredrik Lundh Sammeli (S)',meta:''},
+          {val:'Gulan Avci (FP)',meta:''},
+          {val:'Karl Sigfrid (M)',meta:''},
+          {val:'Emma Henriksson (KD)',meta:''},
+          {val:'Tomas Tobé (M)',meta:''},
+          {val:'Roger Haddad (FP)',meta:''},
+          {val:'Åsa Coenraads (M)',meta:''},
+          {val:'Hans Linde (V)',meta:''},
+          {val:'Oskar Öholm (M)',meta:''},
+          {val:'Jonas Gunnarsson (S)',meta:''},
+          {val:'Maryam Yazdanfar (S)',meta:''},
+          {val:'Fredrik Schulte (M)',meta:''},
+          {val:'Helena Leander (MP)',meta:''},
+          {val:'Gustav Fridolin (MP)',meta:''},
+          {val:'Jens Holm (V)',meta:''},
+          {val:'David Lång (SD)',meta:''},
+          {val:'Maria Abrahamsson (M)',meta:''},
+          {val:'Arhe Hamednaca (S)',meta:''},
+          {val:'Caroline Szyber (KD)',meta:''},
+          {val:'Jessica Rosencrantz (M)',meta:''},
+          {val:'Abir Al-Sahlani (C)',meta:''},
+          {val:'Amir Adan (M)',meta:''},
+          {val:'Hanif Bali (M)',meta:''},
+          {val:'Kent Ekeroth (SD)',meta:''},
+          {val:'Björn Söder (SD)',meta:''},
+          {val:'Ingela NylundWatz (S)',meta:''},
+          {val:'Pyry Niemi (S)',meta:''},
+          {val:'Jessika Vilhelmsson (M)',meta:''},
+          {val:'Marta Obminska (M)',meta:''},
+          {val:'Sara Karlsson (S)',meta:''},
+          {val:'Hans Ekström (S)',meta:''},
+          {val:'Carina Herrstedt (SD)',meta:''},
+          {val:'Anna-Lena Sörenson (S)',meta:''},
+          {val:'Annika Lillemets (MP)',meta:''},
+          {val:'Thoralf Alfsson (SD)',meta:''},
+          {val:'Jimmie Åkesson (SD)',meta:''},
+          {val:'Kew Nordqvist (MP)',meta:''},
+          {val:'Peter Persson (S)',meta:''},
+          {val:'Clas-Göran Carlsson (S)',meta:''},
+          {val:'Johan Hultberg (M)',meta:''},
+          {val:'Jörgen Andersson (M)',meta:''},
+          {val:'Jonas Åkerlund (SD)',meta:''},
+          {val:'Josef Fransson (SD)',meta:''},
+          {val:'Maria Ferm (MP)',meta:''},
+          {val:'Kajsa Lunderquist (M)',meta:''},
+          {val:'Magnus Ehrencrona (MP)',meta:''},
+          {val:'Thomas Finnborg (M)',meta:''},
+          {val:'Jonas Jacobsson Gjörtler (M)',meta:''},
+          {val:'Tony Wiklander (SD)',meta:''},
+          {val:'Kerstin Nilsson (S)',meta:''},
+          {val:'Julia Kronlid (SD)',meta:''},
+          {val:'Mattias Karlsson (SD)',meta:''},
+          {val:'Annelie Karlsson (S)',meta:''},
+          {val:'Christer Akej (M)',meta:''},
+          {val:'Adnan Dibrani (S)',meta:''},
+          {val:'Jenny Petersson (M)',meta:''},
+          {val:'Ola Johansson (C)',meta:''},
+          {val:'Mikael Jansson (SD)',meta:''},
+          {val:'Michael Svensson (M)',meta:''},
+          {val:'Agneta Börjesson (MP)',meta:''},
+          {val:'Susanna Haby (M)',meta:''},
+          {val:'Abdirizak Waberi (M)',meta:''},
+          {val:'Valter Mutt (MP)',meta:''},
+          {val:'Mattias Jonsson (S)',meta:''},
+          {val:'Shadiye Heydari (S)',meta:''},
+          {val:'Sven-Olof Sällström (SD)',meta:''},
+          {val:'Lise Nordin (MP)',meta:''},
+          {val:'Ellen Juntti (M)',meta:''},
+          {val:'Johnny Skalin (SD)',meta:''},
+          {val:'Ulrik Nilsson (M)',meta:''},
+          {val:'Gunilla Svantorp (S)',meta:''},
+          {val:'Bengt Berg (V)',meta:''},
+          {val:'Stina Bergström (MP)',meta:''},
+          {val:'Jonas Eriksson (MP)',meta:''},
+          {val:'Håkan Bergman (S)',meta:''},
+          {val:'Per Ramhorn (SD)',meta:''},
+          {val:'Lotta Olsson (M)',meta:''},
+          {val:'Margareta Larsson (SD)',meta:''},
+          {val:'Agneta Luttropp (MP)',meta:''},
+          {val:'Carl-Oskar Bohlin (M)',meta:''},
+          {val:'Ann-Britt Åsebol (M)',meta:''},
+          {val:'Lars Beckman (M)',meta:''},
+          {val:'Richard Jomshof (SD)',meta:''},
+          {val:'Elin Lundgren (S)',meta:''},
+          {val:'Kristina Nilsson (S)',meta:''},
+          {val:'Ingemar Nilsson (S)',meta:''},
+          {val:'Emil Källström (C)',meta:''},
+          {val:'Christina HöjLarsen (V)',meta:''},
+          {val:'Saila Quicklund (M)',meta:''},
+          {val:'Isak From (S)',meta:''},
+          {val:'Edward Riedl (M)',meta:''},
+          {val:'Elisabeth Björnsdotter Rahm (M)',meta:''},
+          {val:'Jonas Sjöstedt (V)',meta:''},
+          {val:'Anders Sellström (KD)',meta:''},
+          {val:'Sven-Erik Bucht (S)',meta:''},
+          {val:'Stellan Bojerud (SD)',meta:''},
+          {val:'Markus Wiechel (SD)',meta:''},
+          {val:'Anna Hagwall (SD)',meta:''},
+          {val:'Johan Hedin (C)',meta:''},
+          {val:'Rebwar Hassan (MP)',meta:''},
+          {val:'Mohamoud M.Enow (M)',meta:''},
+          {val:'Anton Abele (M)',meta:''},
+          {val:'Cecilia Brinck (M)',meta:''},
+          {val:'Metin Ataseven (M)',meta:''},
+          {val:'Sedat Dogru (M)',meta:''},
+          {val:'Bino Drummond (M)',meta:''},
+          {val:'Björn Samuelson (M)',meta:''},
+          {val:'Nils Brown (M)',meta:''},
+          {val:'Göran Lindell (C)',meta:''},
+          {val:'Andreas Carlson (KD)',meta:''},
+          {val:'Peter Jutterström (M)',meta:''},
+          {val:'Linda Wemmert (M)',meta:''},
+          {val:'Magnus Sjödahl (KD)',meta:''},
+          {val:'Rickard Nordin (C)',meta:''},
+          {val:'Annika Duàn (S)',meta:''},
+          {val:'Anders Ahlgren (C)',meta:''},
+          {val:'Johan Johansson (M)',meta:''},
+          {val:'statsminister Fredrik Reinfeldt (M)',meta:''},
+          {val:'finansminister Anders Borg (M)',meta:''},
+          {val:'it- och energiminister Anna-Karin Hatt (C)',meta:''},
+          {val:'näringsminister Annie Lööf (C)',meta:''},
+          {val:'justitieminister Beatrice Ask (M)',meta:''},
+          {val:'EU-minister Birgitta Ohlsson (FP)',meta:''},
+          {val:'utrikesminister Carl Bildt (M)',meta:''},
+          {val:'infrastrukturminister Catharina Elmsäter-Svärd (M)',meta:''},
+          {val:'integrationsminister Erik Ullenhag (FP)',meta:''},
+          {val:'landsbygdsminister Eskil Erlandsson (C)',meta:''},
+          {val:'handels- och nordisk samarbetsminister Ewa Björling (M)',meta:''},
+          {val:'biståndsminister Gunilla Carlsson (M)',meta:''},
+          {val:'socialminister Göran Hägglund (KD)',meta:''},
+          {val:'arbetsmarknadsminister Hillevi Engström (M)',meta:''},
+          {val:'utbildningsminister Jan Björklund (FP)',meta:''},
+          {val:'försvarsminister Karin Enström (M)',meta:''},
+          {val:'kultur- och idrottsminister Lena Adelsohn Liljeroth (M)',meta:''},
+          {val:'miljöminister Lena Ek (C)',meta:''},
+          {val:'jämställdhetsminister Maria Arnholm (FP)',meta:''},
+          {val:'barn- och äldreminister Maria Larsson (KD)',meta:''},
+          {val:'finansmarknadsminister Peter Norman (M)',meta:''},
+          {val:'civil- och bostadsminister Stefan Attefall (KD)',meta:''},
+          {val:'migrationsminister Tobias Billström (M)',meta:''},
+          {val:'socialförsäkringsminister Ulf Kristersson (M)',meta:''}
+          ];
+
+</script>
+
+<style>
+  body {
+    font-family: Verdana;
+    font-size: 11px;
+  }
+  
+  h2 {
+    margin-bottom: 0;
+  }
+  
+  small {
+    display: block;
+    margin-top: 40px;
+    font-size: 9px;
+  }
+  
+  small,
+  small a {
+    color: #666;
+  }
+  
+  a {
+    color: #000;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  #toolbar [data-wysihtml5-action] {
+    float: right;
+    margin-right: 10px;
+  }
+  
+  #toolbar,
+  textarea {
+    width: 500px;
+    padding: 5px;
+  }
+  
+  textarea {
+    height: 80px;
+    border: 2px solid green;
+    box-sizing: boder-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    font-family: Verdana;
+    font-size: 11px;
+  }
+  
+  textarea:focus {
+    color: black;
+    border: 2px solid black;
+  }
+  
+  .wysihtml5-command-active {
+    font-weight: bold;
+  }
+
+
+</style>
+</head>
+<body>
+<h1>wysihtml5 - Simple Editor Example...</h1>
+
+<p>
+  Uses a custom rule set that allows the following elements: <em>strong, b, em, i, a, span</em><br>
+  Links will automatically receive <i>target="_blank"</i> and <i>rel="nofollow"</i>. Check the source code of this page.
+</p>
+
+<form>
+  <div id="toolbar" style="display: none;">
+    <a data-wysihtml5-command="bold" title="CTRL+B">bold</a> |
+    <a data-wysihtml5-command="italic" title="CTRL+I">italic</a>
+    <a data-wysihtml5-action="change_view">switch to html view</a>
+    <a data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="<q>foobar</q>">insert quote</a>
+  </div>
+  <p>
+    <textarea id="tekzt">Lorem ipsum dolor sit amet, cum melius ceteros suscipiantur te, esse consul sadipscing eum no, no iriure virtute suscipit his</textarea>
+  </p>
+
+  <br><input type="reset" value="Reset form!">
+</form>
+<form>
+  <div id="toolbar2" style="display: none;">
+    <a data-wysihtml5-command="bold" title="CTRL+B">bold</a> |
+    <a data-wysihtml5-command="italic" title="CTRL+I">italic</a>
+    <a data-wysihtml5-action="change_view">switch to html view</a>
+  </div>
+  <p>
+    <textarea id="tekzt2">Lorem ipsum dolor sit amet, cum melius ceteros suscipiantur te, esse consul sadipscing eum no, no iriure virtute suscipit his</textarea>
+  </p>
+
+  <br><input type="reset" value="Reset form!">
+</form>
+
+<script src="simple.js"></script>
+<script src="wysihtml5-0.3.0.js"></script>
+<script>
+
+
+  var editor1 = new wysihtml5.Editor("tekzt", {
+    toolbar: "toolbar",
+    name: "tekzt",
+    parserRules:  wysihtml5ParserRules,
+    cleanUp: true
+  });
+
+  var editor2 = new wysihtml5.Editor("tekzt2", {
+    toolbar: "toolbar2",
+    name: "tekzt2",
+    parserRules:  wysihtml5ParserRules,
+    cleanUp: true
+  });
+
+
+$("#tekzt").sew({
+  values: values,
+  name: "tekzt",
+  token:'@',
+  editor: editor1
+});
+$("#tekzt2").sew({
+  values: values,
+  name: "tekzt2",
+  token:'@',
+  editor: editor2
+});
+
+
+</script>
+
+
+</body>
+</html>
