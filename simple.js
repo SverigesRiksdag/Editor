@@ -7,6 +7,11 @@
  * For a proper documentation of the format check advanced.js
  */
 var wysihtml5ParserRules = {
+  "events": {
+    "change": function() {
+      console.log("change");
+    }
+  },
   tags: {
     strong: {},
     i:      {"rename_tag": "em"},

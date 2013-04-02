@@ -26,7 +26,7 @@
 		this.expression = new RegExp('(?:^|\\b|\\s)' + this.options.token + '([\\w.]*)$');
 		this.cleanupHandle = null;
 
-		this.init();
+		this.init(this);
 	}
 
 	Plugin.MENU_TEMPLATE = "<div class='-sew-list-container' style='display: none; position: absolute;'><ul class='-sew-list'></ul></div>";
@@ -35,12 +35,27 @@
 
 	Plugin.KEYS = [40, 38, 13, 27];
 
-	Plugin.prototype.init = function() {
-		console.log(this.options);		
-		this.$element.bind('keyup', this.onKeyUp.bind(this))
+	Plugin.prototype.init = function(othis) {
+
+		var currentEditor = this.options.editor;
+
+		currentEditor.observe("load", function(e) {
+			
+            currentEditor.composer.element.addEventListener("keyup", function(e) {
+                othis.onKeyUp(e);
+            });				
+            currentEditor.composer.element.addEventListener("keydown", function(e) {
+                othis.onKeyDown(e);
+            });			
+            currentEditor.composer.element.addEventListener("focus", function(e) {
+                othis.renderElements(othis.options.values)
+            });
+
+        });
+/*		$(document).bind('keyup', this.onKeyUp.bind(this))
 					 .bind('keydown', this.onKeyDown.bind(this))
 					 .bind('focus', this.renderElements.bind(this, this.options.values));
-
+*/	
 	};
 
 	Plugin.prototype.reset = function() {
@@ -109,6 +124,7 @@
 	};
 
 	Plugin.prototype.displayList = function() {
+
 		if(!this.filtered.length) return;
 
 		this.$itemList.show();
@@ -187,12 +203,14 @@
 	}
 
 	Plugin.prototype.onKeyUp = function(e) {
-		e.preventDefault();
+		console.log(this.$element);
+		//e.preventDefault();
 		var text = this.$element.text();
 		var startpos = this.getSelectionStart();
 		var val = text.substring(0, startpos);
 		
 		var matches = val.match(this.expression);
+		
 		if(!matches && this.matched) {
 			this.matched = false;
 			this.dontFilter = false;
