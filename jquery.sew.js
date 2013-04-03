@@ -11,6 +11,8 @@
 		element.text(value.val);
 	};
 
+	
+
 	var pluginName = 'sew',
 		document = window.document,
 		defaults = {token: '@', elementFactory: elementFactory};
@@ -18,14 +20,16 @@
 	function Plugin(element, options) {
 
 		this.options = $.extend({}, defaults, options);
+		this.ele = element;
 		this.$element = $(element).siblings("iframe").contents().find("body");
+		//console.log($(element).siblings("iframe").contents().find("body").html());
 		this.$itemList = $(Plugin.MENU_TEMPLATE);
 		this.reset();
 		this._defaults = defaults;
 		this._name = pluginName;
 		this.expression = new RegExp('(?:^|\\b|\\s)' + this.options.token + '([\\w.]*)$');
 		this.cleanupHandle = null;
-
+		
 		this.init(this);
 	}
 
@@ -38,16 +42,18 @@
 	Plugin.prototype.init = function(othis) {
 
 		var currentEditor = this.options.editor;
+		//console.log(this);
 
-		currentEditor.observe("load", function(e) {
-			
-            currentEditor.composer.element.addEventListener("keyup", function(e) {
-                othis.onKeyUp(e);
-            });				
-            currentEditor.composer.element.addEventListener("keydown", function(e) {
+		currentEditor.on("load", function(e) {
+
+            //console.log(othis);
+           	$(currentEditor.composer.element).on("keyup", {"othis":othis}, function(e) {
+                othis.onKeyUp(e, othis);
+            });			
+            $(currentEditor.composer.element).on("keydown", function(e) {
                 othis.onKeyDown(e);
             });			
-            currentEditor.composer.element.addEventListener("focus", function(e) {
+            $(currentEditor.composer.element).on("focus", function(e) {
                 othis.renderElements(othis.options.values)
             });
 
@@ -91,7 +97,7 @@
 	Plugin.prototype.replace = function(replacement) {
 		var replacementString = "";
 		var replacementStartPosition = this.getSelectionStart()-this.options.lastsearch.length-1;
-		console.log(replacementStartPosition);
+		//console.log(replacementStartPosition);
 		if (replacementStartPosition === 0) {
 			replacementString = " ";
 		}
@@ -131,7 +137,7 @@
 		var element = this.$element;
 		var offset = this.$element.offset();
 		this.options.editor.composer.commands.exec("insertHTML", "<em id='positionerspan'></em>");
-		console.log($("." + this.options.name).contents().find("#positionerspan").position());
+		//console.log($("." + this.options.name).contents().find("#positionerspan").position());
 	    var pos = $("." + this.options.name).contents().find("#positionerspan").position();
 	    var iframePos = $("." + this.options.name).position(); //TODO: Funkar inte med flera frames.
 	    //console.log("offsetTop: " + offset.top + " - positionerspan top: " + pos.top + " - iframe top: " + iframePos.top);
@@ -167,12 +173,17 @@
 		}
 	};
 
-	Plugin.prototype.getSelectionStart = function() {
+	Plugin.prototype.getSelectionStart = function(element) {
 
-		var element = this.$element[0];
+		var element = $(this.ele).siblings("iframe").contents().find("body");
+		//var element = $(e.currentTarget[0]);
+		//console.log(element);
 	    var caretOffset = 0;
 	    var iframe= $('.' + this.options.name)[0];
+
 	    var iframewindow= iframe.contentWindow? iframe.contentWindow : iframe.contentDocument.defaultView;
+	    console.log($(this.ele).siblings("iframe").contents().find("body").text());
+	    
 	    if (typeof iframewindow.getSelection != "undefined") {	    	
 	        var range = iframewindow.getSelection().getRangeAt(0);
 	        var preCaretRange = range.cloneRange();
@@ -202,13 +213,14 @@
 		}
 	}
 
-	Plugin.prototype.onKeyUp = function(e) {
-		console.log(this.$element);
-		//e.preventDefault();
-		var text = this.$element.text();
-		var startpos = this.getSelectionStart();
-		var val = text.substring(0, startpos);
+	Plugin.prototype.onKeyUp = function(e, othis) {
 		
+		//e.preventDefault();
+		var text = $(e.currentTarget).text();
+		//console.log($(e.currentTarget).text());
+		var startpos = othis.getSelectionStart($(e.currentTarget));
+		var val = text.substring(0, startpos);
+		console.log(startpos);
 		var matches = val.match(this.expression);
 		
 		if(!matches && this.matched) {
