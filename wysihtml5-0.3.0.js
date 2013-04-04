@@ -31,6 +31,7 @@ var wysihtml5 = {
   ENTER_KEY:      13,
   ESCAPE_KEY:     27,
   SPACE_KEY:      32,
+  TOKEN_KEY:      50,
   DELETE_KEY:     46
 };/**
  * @license Rangy, a cross-browser JavaScript range and selection library
@@ -6144,6 +6145,7 @@ wysihtml5.quirks.cleanPastedHTML = (function() {
       var range     = rangy.createRange(this.doc),
           node      = range.createContextualFragment(html),
           lastChild = node.lastChild;
+        
       this.insertNode(node);
       if (lastChild) {
         this.setAfter(lastChild);
@@ -6780,19 +6782,20 @@ wysihtml5.Commands = Base.extend(
    *    commands.exec("insertImage", "http://a1.twimg.com/profile_images/113868655/schrei_twitter_reasonably_small.jpg");
    */
   exec: function(command, value) {
+
     var obj     = wysihtml5.commands[command],
         args    = wysihtml5.lang.array(arguments).get(),
         method  = obj && obj.exec,
         result  = null;
-    
     this.editor.fire("beforecommand:composer");
     
     if (method) {
-      args.unshift(this.composer);
+      args.unshift(this.composer);      
       result = method.apply(obj, args);
     } else {
       try {
         // try/catch for buggy firefox
+
         result = this.doc.execCommand(command, false, value);
       } catch(e) {}
     }
@@ -6837,6 +6840,7 @@ wysihtml5.Commands = Base.extend(
    *    var currentBlockElement = commands.value("formatBlock");
    */
   value: function(command) {
+
     var obj     = wysihtml5.commands[command],
         method  = obj && obj.value;
     if (method) {
@@ -7345,7 +7349,6 @@ wysihtml5.Commands = Base.extend(
   };
 })(wysihtml5);(function(wysihtml5) {
   var undef;
-  
   wysihtml5.commands.insertHTML = {
     exec: function(composer, command, html) {
       if (composer.commands.support(command)) {
@@ -7787,7 +7790,6 @@ wysihtml5.Commands = Base.extend(
             if (that.element.lastChild) {
               that.composer.selection.setAfter(that.element.lastChild);
             }
-
             // enable undo button in context menu
             doc.execCommand("insertHTML", false, UNDO_HTML);
             // enable redo button in context menu
@@ -8535,10 +8537,20 @@ wysihtml5.views.View = Base.extend(
     // --------- neword event ---------
     dom.observe(element, "keyup", function(event) {
       var keyCode = event.keyCode;
+
       if (keyCode === wysihtml5.SPACE_KEY || keyCode === wysihtml5.ENTER_KEY) {
         that.parent.fire("newword:composer");
       }
     });
+
+    // --------- neword event ---------
+    dom.observe(element, "keyup", function(event) {
+      var keyCode = event.keyCode;
+      if (keyCode === wysihtml5.TOKEN_KEY) {
+        that.parent.fire("token:composer");
+      }
+    });
+
 
     this.parent.observe("paste:composer", function() {
       setTimeout(function() { that.parent.fire("newword:composer"); }, 0);
@@ -9156,6 +9168,7 @@ wysihtml5.views.Textarea = wysihtml5.views.View.extend(
      *    toolbar.execCommand("formatBlock", "blockquote");
      */
     execCommand: function(command, commandValue) {
+
       if (this.commandsDisabled) {
         return;
       }
@@ -9173,7 +9186,6 @@ wysihtml5.views.Textarea = wysihtml5.views.View.extend(
     _execCommand: function(command, commandValue) {
       // Make sure that composer is focussed (false => don't move caret to the end)
       this.editor.focus(false);
-
       this.composer.commands.exec(command, commandValue);
       this._updateLinkStates();
     },
@@ -9434,7 +9446,7 @@ wysihtml5.views.Textarea = wysihtml5.views.View.extend(
       });
       
       try {
-        console.log("Heya! This page is using wysihtml5 for rich text editing. Check out https://github.com/xing/wysihtml5");
+        //console.log("Heya! This page is using wysihtml5 for rich text editing. Check out https://github.com/xing/wysihtml5");
       } catch(e) {}
     },
     
