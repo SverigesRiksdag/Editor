@@ -50,8 +50,8 @@
            	$(currentEditor.composer.element).on("keyup", {"othis":othis}, function(e) {
                 othis.onKeyUp(e, othis);
             });			
-            $(currentEditor.composer.element).on("keydown", function(e) {
-                othis.onKeyDown(e);
+            $(currentEditor.composer.element).on("keydown", {"othis":othis}, function(e) {
+                othis.onKeyDown(e, othis);
             });			
             $(currentEditor.composer.element).on("focus", function(e) {
                 othis.renderElements(othis.options.values)
@@ -82,8 +82,8 @@
 		this.hightlightItem();
 	};
 
-	Plugin.prototype.select = function() {
-		this.replace(this.filtered[this.index].val);		
+	Plugin.prototype.select = function(othis) {
+		this.replace(this.filtered[this.index].val, othis);		
 		this.hideList();
 	};
 
@@ -94,15 +94,19 @@
 		}.bind(this), 1000);
 	};
 
-	Plugin.prototype.replace = function(replacement) {
+	Plugin.prototype.replace = function(replacement, othis) {
+		console.log(othis);
+		//$(othis.$element).html("zzz");
 		var replacementString = "";
-		var replacementStartPosition = this.getSelectionStart()-this.options.lastsearch.length-1;
+		
+		var replacementStartPosition = othis.getSelectionStart(othis.$element[0], othis)-othis.options.lastsearch.length-1;
 		//console.log(replacementStartPosition);
 		if (replacementStartPosition === 0) {
 			replacementString = " ";
 		}
-    	this.options.editor.composer.commands.exec("insertHTML", " <span class='person'>" + replacement + "</span> ");
-	    this.$element.html(this.$element.html().replace(this.options.token + this.options.lastsearch,replacementString));
+    	othis.options.editor.composer.commands.exec("insertHTML", " <span class='person'>" + replacement + "</span> ");
+	    othis.$element.html(othis.$element.html().replace(othis.options.token + othis.options.lastsearch,replacementString));
+	    
 	};
 
 	Plugin.prototype.hightlightItem = function() {
@@ -129,23 +133,17 @@
 		this.hightlightItem();
 	};
 
-	Plugin.prototype.displayList = function() {
-
+	Plugin.prototype.displayList = function(e) {
 		if(!this.filtered.length) return;
-
 		this.$itemList.show();
-		var element = this.$element;
-		var offset = this.$element.offset();
+		var offset = $(e.currentTarget).offset();
 		this.options.editor.composer.commands.exec("insertHTML", "<em id='positionerspan'></em>");
-		//console.log($("." + this.options.name).contents().find("#positionerspan").position());
 	    var pos = $("." + this.options.name).contents().find("#positionerspan").position();
 	    var iframePos = $("." + this.options.name).position(); //TODO: Funkar inte med flera frames.
-	    //console.log("offsetTop: " + offset.top + " - positionerspan top: " + pos.top + " - iframe top: " + iframePos.top);
 		this.$itemList.css({			
 			left: offset.left + pos.left + iframePos.left,
 			top: offset.top + pos.top + iframePos.top + 22
 		});
-
 		$("." + this.options.name).contents().find("#positionerspan").remove();
 	};
 
@@ -173,17 +171,16 @@
 		}
 	};
 
-	Plugin.prototype.getSelectionStart = function(element) {
-
-		var element = $(this.ele).siblings("iframe").contents().find("body");
-		//var element = $(e.currentTarget[0]);
-		//console.log(element);
+	Plugin.prototype.getSelectionStart = function(elementx, othis) {
+		//
+		var element = othis.$element[0];
+		console.log(element)
 	    var caretOffset = 0;
-	    var iframe= $('.' + this.options.name)[0];
+	    var iframe= $('.' + othis.options.name)[0];
 
 	    var iframewindow= iframe.contentWindow? iframe.contentWindow : iframe.contentDocument.defaultView;
-	    console.log($(this.ele).siblings("iframe").contents().find("body").text());
-	    
+	    //console.log($(this.ele).siblings("iframe").contents().find("body").text());
+	    //console.log(iframewindow.document.getSelection().getRangeAt(0));
 	    if (typeof iframewindow.getSelection != "undefined") {	    	
 	        var range = iframewindow.getSelection().getRangeAt(0);
 	        var preCaretRange = range.cloneRange();
@@ -198,6 +195,7 @@
 	        caretOffset = preCaretTextRange.text.length;
 	    }
 	    $("#curs").html(caretOffset) //TODO: Remove
+	    //console.log("getSelectionStart: " + caretOffset);
 	    return caretOffset;
 	}
 
@@ -216,11 +214,12 @@
 	Plugin.prototype.onKeyUp = function(e, othis) {
 		
 		//e.preventDefault();
+		//console.log($(e.currentTarget)[0]);
 		var text = $(e.currentTarget).text();
 		//console.log($(e.currentTarget).text());
-		var startpos = othis.getSelectionStart($(e.currentTarget));
+		var startpos = othis.getSelectionStart($(e.currentTarget)[0], othis);
 		var val = text.substring(0, startpos);
-		console.log(startpos);
+		
 		var matches = val.match(this.expression);
 		
 		if(!matches && this.matched) {
@@ -231,7 +230,7 @@
 		}
 
 		if(matches && !this.matched) {
-			this.displayList();
+			this.displayList(e);
 			this.lastFilter = "\n";
 			this.matched = true;
 		}
@@ -242,14 +241,14 @@
 		}
 	};
 
-	Plugin.prototype.onKeyDown = function(e) {
+	Plugin.prototype.onKeyDown = function(e, othis) {
 
 		var listVisible = this.$itemList.is(":visible");
 		if(!listVisible || (Plugin.KEYS.indexOf(e.keyCode) < 0)) return;
 
 		switch(e.keyCode) {
 		case 13:
-			this.select();
+			this.select(othis);
 			break;
 		case 40:
 			this.next();
@@ -266,6 +265,7 @@
 	};
 
 	Plugin.prototype.onItemClick = function(element, e) {
+		console.log(element);
 		if(this.cleanupHandle) {
 			window.clearTimeout(this.cleanupHandle);
 		}
