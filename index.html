@@ -38,7 +38,7 @@
       }          
         </style>
 <title>wysihtml5 - Simple Demo</title>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript" src="typeahead.min.js"></script>
 <script type="text/javascript">
 
@@ -643,6 +643,45 @@
 <script src="wysihtml5-0.3.0.js"></script>
 <script>
 
+var savedRange,isInFocus;
+
+function saveSelection(w) {
+    if(w.getSelection)//non IE Browsers
+    {
+        savedRange = w.getSelection().getRangeAt(0);
+    }
+    else if(w.contentDocument.selection)//IE
+    { 
+        savedRange = w.contentDocument.selection.createRange();  
+    } 
+    console.log(savedRange)
+}
+
+
+function restoreSelection(f) {
+     var w = f.contentWindow;
+     var d = f.contentDocument;
+
+    if (savedRange != null) {
+        if (w.getSelection)//non IE and there is already a selection
+        {
+            var s = w.getSelection();
+            if (s.rangeCount > 0) 
+                s.removeAllRanges();
+            s.addRange(savedRange);
+        }
+        else 
+            if (d.createRange)//non IE and no selection
+            {
+                w.getSelection().addRange(savedRange);
+            }
+            else 
+                if (d.selection)//IE
+                {
+                    savedRange.select();
+                }
+    }
+}
 
   var editor1 = new wysihtml5.Editor("tekzt", {
     toolbar: "toolbar",
@@ -661,10 +700,10 @@
 //console.log($(editor1.composer.iframe.contentDocument));
 
 editor1.on("load", function(e){
-
-     console.log(this);
+     
      $(editor1.composer.iframe.contentDocument).bind('keyup', 'ctrl+m', function(e){
-          console.log("OK");
+          
+          saveSelection(editor1.composer.iframe.contentWindow); // Dokumentera detta
           // Visa listan
           var inp = $("<input style='display:block'/>");
           $("#tekzt").siblings("iframe").after(inp);
@@ -678,9 +717,11 @@ editor1.on("load", function(e){
           inp.on("typeahead:selected", function(e) {
                var val = inp.val();
                $("#tekzt").siblings("iframe").contents().find("body").focus();
+               restoreSelection(editor1.composer.iframe);
                editor1.composer.commands.exec("insertHTML", "<strong>" + val + "</strong>");
                console.log(val);
                // Ta bort fältet...
+
           });
 
           //inp.focus();     
