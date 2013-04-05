@@ -658,7 +658,39 @@
     cleanUp: true
   });
 
-$("#tekzt").siblings("iframe").contents().find("body").bind('keyup', 'ctrl+m', function(){
+//console.log($(editor1.composer.iframe.contentDocument));
+
+editor1.on("load", function(e){
+
+     console.log(this);
+     $(editor1.composer.iframe.contentDocument).bind('keyup', 'ctrl+m', function(e){
+          console.log("OK");
+          // Visa listan
+          var inp = $("<input style='display:block'/>");
+          $("#tekzt").siblings("iframe").after(inp);
+          //inp.focus();
+
+          inp.typeahead({
+            name: 'accounts',
+            local: values
+          });
+
+          inp.on("typeahead:selected", function(e) {
+               var val = inp.val();
+               $("#tekzt").siblings("iframe").contents().find("body").focus();
+               editor1.composer.commands.exec("insertHTML", "<strong>" + val + "</strong>");
+               console.log(val);
+               // Ta bort fältet...
+          });
+
+          //inp.focus();     
+     });
+});
+
+/*
+$(editor1.composer.iframe.contentDocument).bind('keyup', 'ctrl+m', function(e){
+     e.preventDefault();
+     e.stopPropagation();
      console.log("OK");
      // Visa listan
      var inp = $("<input style='display:block'/>");
@@ -680,7 +712,7 @@ $("#tekzt").siblings("iframe").contents().find("body").bind('keyup', 'ctrl+m', f
 
      inp.focus();     
 });
-
+*/
 
 
 
