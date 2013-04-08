@@ -1,38 +1,38 @@
 
 
-function saveSelection(w, savedRange) {
+function saveSelection(w, editor) {
     if(w.getSelection)//non IE Browsers
     {
-        savedRange = w.getSelection().getRangeAt(0);
+        editor.savedRange = w.getSelection().getRangeAt(0);
     }
     else if(w.contentDocument.selection)//IE
     { 
-        savedRange = w.contentDocument.selection.createRange();  
+        editor.savedRange = w.contentDocument.selection.createRange();  
     } 
 }
 
 
-function restoreSelection(f, savedRange) {
+function restoreSelection(f, editor) {
      var w = f.contentWindow;
      var d = f.contentDocument;
 
-    if (savedRange != null) {
+    if (editor.savedRange != null) {
         if (w.getSelection)//non IE and there is already a selection
         {
             var s = w.getSelection();
             if (s.rangeCount > 0) 
                 s.removeAllRanges();
-            s.addRange(savedRange);
+            s.addRange(editor.savedRange);
         }
         else 
             if (d.createRange)//non IE and no selection
             {
-                w.getSelection().addRange(savedRange);
+                w.getSelection().addRange(editor.savedRange);
             }
             else 
                 if (d.selection)//IE
                 {
-                    savedRange.select();
+                    editor.savedRange.select();
                 }
     }
 }
@@ -43,13 +43,13 @@ function addTypeAhead(editor) {
      var doc = editor.composer.iframe.contentDocument;
      var win = editor.composer.iframe.contentWindow;
      var frame = editor.composer.iframe;
-     editor.savedRange = null;
+     editor.savedRange;
 
-     $(frame.contentDocument).bind('keyup', 'ctrl+l', function(e){
+     $(frame.contentDocument).bind('keyup', 'ctrl+m', function(e){
 
           frame.insertPerson = function() {
                $(this).contents().find("body").focus();
-               restoreSelection(this, editor.savedRange);
+               restoreSelection(this, editor);
                if(frame.inp.val() != "") {
                     editor.composer.commands.exec("insertHTML", frame.inp.val());
                }
@@ -57,7 +57,7 @@ function addTypeAhead(editor) {
                frame.inp.typeahead("destroy");
           }
           
-          saveSelection(frame.contentWindow, editor.savedRange); // Dokumentera detta
+          saveSelection(frame.contentWindow, editor); // Dokumentera detta
           
           frame.inp = $("<input style='display:block; '/>"); //Create the field for input of person namne
           $(frame).after(frame.inp);          
